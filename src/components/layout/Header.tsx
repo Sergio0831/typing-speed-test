@@ -10,11 +10,9 @@ export default function Header({ className }: { className?: string }) {
       <LogoLarge className="h-10 w-66.75 hidden xs:block" />
       <div className="flex-space-between gap-x-2.5">
         <Trophy className="size-5" />
-        <div>
-          <span className="text-preset-4 text-neutral-400">
-            Personal best:{" "}
-          </span>
-          <span className="text-preset-4">92 WPM</span>
+        <div className="flex-center gap-x-2">
+          <span className="text-preset-3 text-muted">Personal best:</span>
+          <span className="text-preset-2">92 WPM</span>
         </div>
       </div>
     </header>
