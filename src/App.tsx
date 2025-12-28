@@ -4,21 +4,35 @@ import Header from "./components/layout/Header";
 import Wrapper from "./components/layout/Wrapper";
 import { RadioGroup, RadioGroupItem } from "./components/ui/radio-group";
 import { Separator } from "./components/ui/separator";
-import { motion } from "framer-motion";
+import { DIFFICULTY_LABELS, MODE_LABELS } from "./types/test";
+import { useTypingStore } from "./store/typingStore";
+import TypingController from "./components/custom/TypingController";
+import type { TestPhase } from "./types/ui";
+import StartOverlay from "./components/custom/StartOverlay";
+import Footer from "./components/layout/Footer";
+import { useTypingTest } from "./hooks/useTypingTest";
 
-const difficulty = ["Easy", "Medium", "Hard"];
-const mode = ["Timed (60s)", "Passage"];
-
-const MotionDifficultyItem = motion.create(RadioGroupItem);
+const text =
+  "Quantum entanglement—Einstein's spooky action at a distance continues to perplex physicists and philosophers alike. When two particles become entangled, measuring one instantaneously affects the other, regardless of the distance separating them. This phenomenon doesn't violate relativity (no information travels faster than light), yet it challenges our intuitions about locality, causality, and the nature of reality itself.";
 
 function App() {
-  const [selectedDifficulty, setSelectedDifficulty] = useState("Easy");
-  const [selectedMode, setSelectedMode] = useState("Timed (60s)");
+  const selectedDifficulty = useTypingStore((state) => state.difficulty);
+  const setSelectedDifficulty = useTypingStore((state) => state.setDifficulty);
+  const selectedMode = useTypingStore((state) => state.mode);
+  const setSelectedMode = useTypingStore((state) => state.setMode);
+  const typing = useTypingTest(text);
+
+  const [phase, setPhase] = useState<TestPhase>("idle");
+
+  const handleReset = () => {
+    typing.reset(text);
+    setPhase("idle");
+  };
 
   return (
     <Wrapper>
       <Header className="mt-4 xs:mt-8 mb-8 xs:mb-10 md:mb-16" />
-      <main className="grid gap-x-4">
+      <main className="grid gap-x-4 gap-y-6">
         {/* Stats and Controls start */}
         <div className="pb-4 border-b border-b-border flex justify-between lg:items-center lg:flex-row flex-col gap-y-4">
           {/* Stats start */}
@@ -40,9 +54,9 @@ function App() {
                 onValueChange={setSelectedDifficulty}
                 value={selectedDifficulty}
               >
-                {difficulty.map((level) => (
-                  <RadioGroupItem key={level} value={level}>
-                    <span className="text-preset-5">{level}</span>
+                {DIFFICULTY_LABELS.map((value) => (
+                  <RadioGroupItem key={value.level} value={value.level}>
+                    <span className="text-preset-5">{value.label}</span>
                   </RadioGroupItem>
                 ))}
               </RadioGroup>
@@ -57,9 +71,9 @@ function App() {
                 onValueChange={setSelectedMode}
                 value={selectedMode}
               >
-                {mode.map((level) => (
-                  <RadioGroupItem key={level} value={level}>
-                    <span className="text-preset-5">{level}</span>
+                {MODE_LABELS.map((value) => (
+                  <RadioGroupItem key={value.mode} value={value.mode}>
+                    <span className="text-preset-5">{value.label}</span>
                   </RadioGroupItem>
                 ))}
               </RadioGroup>
@@ -69,8 +83,19 @@ function App() {
           {/* Controls end */}
         </div>
         {/* Stats and Controls end */}
-        <div></div>
+        <div className="relative">
+          <TypingController
+            chars={typing.chars}
+            cursor={typing.cursor}
+            onKeyDown={typing.onKeyDown}
+            phase={phase}
+          />
+          {phase === "idle" && (
+            <StartOverlay onStart={() => setPhase("running")} />
+          )}
+        </div>
       </main>
+      {phase === "running" && <Footer onReset={handleReset} />}
     </Wrapper>
   );
 }

@@ -27,11 +27,15 @@
   --color-yellow-500: hsl(49, 85%, 70%);
 
   /* Semantic colors */
+  --color-primary: var(--color-blue-600);
   --color-border: var(--color-neutral-700);
   --color-muted: var(--color-neutral-400);
   --color-ring: var(--color-blue-400);
   --color-bg: var(--color-neutral-900);
   --color-text: var(--color-neutral-0);
+  --color-destructive: var(--color-red-500);
+  --color-success: var(--color-green-500);
+  --color-warning: var(--color-yellow-500);
 
   /* Font sizes */
   --text-3xl: 2.5rem; /* 40px */
@@ -48,7 +52,7 @@
   --font-bold: 700;
 
   /* Letter spacing */
-  --tracking-tight: -0.03em;
+  --tracking-tight: -0.025em;
   --tracking-snug: -0.02em;
   --tracking-normal: 0;
   --tracking-wide: 0.02em;
@@ -122,7 +126,7 @@
   line-height: var(--leading-snug);
   letter-spacing: var(--tracking-wide);
 
-  @media (width >= var(--breakpoint-xs)) {
+  @media (width >= 41.5rem) {
     font-size: var(--text-display);
     line-height: var(--leading-loose);
     letter-spacing: var(--tracking-wider);
@@ -139,6 +143,18 @@
 @utility text-preset-3 {
   line-height: var(--leading-snug);
   letter-spacing: var(--tracking-snug);
+
+  @media (width >= 40rem) {
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+  }
+}
+
+@utility text-preset-3-semibold {
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-snug);
+  font-weight: var(--font-semibold);
 
   @media (width >= 40rem) {
     font-size: var(--text-lg);
